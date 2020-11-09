@@ -48,19 +48,17 @@ import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 @Listeners(MockitoTestNGListener.class)
-public class Openshift4TrustedCAProvisionerTest {
+public class OpenshiftTrustedCAProvisionerTest {
 
   private static final String POD_NAME = "testPod";
   private static final String CONFIGMAP_NAME = "ca-certs";
   private static final String CONFIGMAP_LABELS = "foo=bar";
   private static final String CERTIFICATE_MOUNT_PATH = "/certs";
-  private static final String CONFIGMAP_KEY = "testConfigMapKey";
-  private static final String CONFIGMAP_VALUE = "testConfigMapValue";
   private static final String CHE_SERVER_NAMESPACE = "testCheServerNamespace";
   private static final String INJECTED_CA_BUNDLE_KEY = "ca-bundle.crt";
   private static final String INJECTED_CA_BUNDLE_VALUE = "ca-bundle.crt.content";
   private static final String MANUAL_CA_BUNDLE_KEY = "manual-ca.crt";
-  private static final String MANUAL_CA_BUNDLE_VALUE = "maunal-ca.crt.content";
+  private static final String MANUAL_CA_BUNDLE_VALUE = "manual-ca.crt.content";
 
   @Mock CheServerKubernetesClientFactory clientFactory;
 
@@ -96,7 +94,7 @@ public class Openshift4TrustedCAProvisionerTest {
 
   Map<String, ConfigMap> envConfigMaps = new HashMap<>();
 
-  private Openshift4TrustedCAProvisioner trustedCAProvisioner;
+  private OpenshiftTrustedCAProvisioner trustedCAProvisioner;
 
   @BeforeMethod
   public void setup() throws Exception {
@@ -120,7 +118,7 @@ public class Openshift4TrustedCAProvisionerTest {
         .thenReturn(cheServerConfigMapAnnotations);
 
     this.trustedCAProvisioner =
-        new Openshift4TrustedCAProvisioner(
+        new OpenshiftTrustedCAProvisioner(
             CONFIGMAP_NAME,
             CONFIGMAP_NAME,
             CONFIGMAP_LABELS,
@@ -131,8 +129,8 @@ public class Openshift4TrustedCAProvisionerTest {
 
   @Test
   public void shouldDoNothingIfCAStoreIsNotInitialized() throws Exception {
-    Openshift4TrustedCAProvisioner localProvisioner =
-        new Openshift4TrustedCAProvisioner(
+    OpenshiftTrustedCAProvisioner localProvisioner =
+        new OpenshiftTrustedCAProvisioner(
             null,
             CONFIGMAP_NAME,
             CONFIGMAP_LABELS,
