@@ -124,5 +124,3 @@ async function cloneTestRepo() {
     await quickOpenContainer.typeAndSelectSuggestion(sshLinkToRepo, confirmMessage);
     await gitPlugin.clickOnSelectRepositoryButton();
 }
-
-

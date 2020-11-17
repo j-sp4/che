@@ -83,13 +83,13 @@ export class GitPlugin {
         await this.driverHelper.waitPresence(By.xpath(`//div[text()='Staged Changes']/parent::div/parent::div/parent::div/following-sibling::div//span[text()=\'${expectedStagedItem}\']`), timeout);
     }
 
-    async commitFromCommandMenu(timeout: number = TimeoutConstants.TS_GIT_CONAINER_INTERACTION_TIMEOUT) {
+    async commitFromCommandMenu() {
         Logger.debug('GitPlugin.commitFromScmView');
         await this.topMenu.selectOption('View', 'Find Command...');
         await this.quickOpenContainer.typeAndSelectSuggestion('Commit', 'Git: Commit');
     }
 
-    async pushChangesFromCommandMenu(timeout: number = TimeoutConstants.TS_GIT_CONAINER_INTERACTION_TIMEOUT) {
+    async pushChangesFromCommandMenu() {
         Logger.debug('GitPlugin.commitFromScmView');
         await this.topMenu.selectOption('View', 'Find Command...');
         await this.quickOpenContainer.typeAndSelectSuggestion('Push', 'Git: Push');
