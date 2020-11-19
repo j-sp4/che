@@ -81,8 +81,7 @@ public class BrokerEnvironmentFactoryTest {
                 CA_CERTIFICATES_MOUNT_PATH,
                 certProvisioner) {
               @Override
-              protected KubernetesEnvironment doCreate(
-                  BrokersConfigs brokersConfigs, RuntimeIdentity runtimeIdentity) {
+              protected KubernetesEnvironment doCreate(BrokersConfigs brokersConfigs) {
                 return null;
               }
             });
@@ -109,7 +108,7 @@ public class BrokerEnvironmentFactoryTest {
     factory.createForMetadataBroker(pluginFQNs, runtimeId, false);
 
     // then
-    verify(factory).doCreate(captor.capture(), runtimeId);
+    verify(factory).doCreate(captor.capture());
     BrokersConfigs brokersConfigs = captor.getValue();
 
     List<Container> containers =
@@ -151,7 +150,7 @@ public class BrokerEnvironmentFactoryTest {
     factory.createForArtifactsBroker(pluginFQNs, runtimeId, false);
 
     // then
-    verify(factory).doCreate(captor.capture(), runtimeId);
+    verify(factory).doCreate(captor.capture());
     BrokersConfigs brokersConfigs = captor.getValue();
 
     List<Container> containers =
@@ -191,7 +190,7 @@ public class BrokerEnvironmentFactoryTest {
     factory.createForArtifactsBroker(pluginFQNs, runtimeId, true);
 
     // then
-    verify(factory).doCreate(captor.capture(), runtimeId);
+    verify(factory).doCreate(captor.capture());
     BrokersConfigs brokersConfigs = captor.getValue();
 
     List<Container> containers =
@@ -216,7 +215,7 @@ public class BrokerEnvironmentFactoryTest {
     factory.createForMetadataBroker(pluginFQNs, runtimeId, true);
 
     // then
-    verify(factory).doCreate(captor.capture(), runtimeId);
+    verify(factory).doCreate(captor.capture());
     BrokersConfigs brokersConfigs = captor.getValue();
 
     List<Container> containers =
@@ -241,7 +240,7 @@ public class BrokerEnvironmentFactoryTest {
     factory.createForMetadataBroker(pluginFQNs, runtimeId, false);
 
     // then
-    verify(factory).doCreate(captor.capture(), runtimeId);
+    verify(factory).doCreate(captor.capture());
     BrokersConfigs brokersConfigs = captor.getValue();
     PodSpec brokerPodSpec = brokersConfigs.pods.values().iterator().next().getSpec();
 
@@ -260,7 +259,7 @@ public class BrokerEnvironmentFactoryTest {
     factory.createForArtifactsBroker(pluginFQNs, runtimeId, false);
 
     // then
-    verify(factory).doCreate(captor.capture(), runtimeId);
+    verify(factory).doCreate(captor.capture());
     BrokersConfigs brokersConfigs = captor.getValue();
     PodSpec brokerPodSpec = brokersConfigs.pods.values().iterator().next().getSpec();
 
@@ -282,7 +281,7 @@ public class BrokerEnvironmentFactoryTest {
     factory.createForMetadataBroker(pluginFQNs, runtimeId, false);
 
     // then
-    verify(factory).doCreate(captor.capture(), runtimeId);
+    verify(factory).doCreate(captor.capture());
     BrokersConfigs brokersConfigs = captor.getValue();
     ConfigMap brokerConfigMap = brokersConfigs.configMaps.values().iterator().next();
     String config = brokerConfigMap.getData().get(BrokerEnvironmentFactory.CONFIG_FILE);
@@ -314,7 +313,7 @@ public class BrokerEnvironmentFactoryTest {
     factory.createForArtifactsBroker(pluginFQNs, runtimeId, false);
 
     // then
-    verify(factory).doCreate(captor.capture(), runtimeId);
+    verify(factory).doCreate(captor.capture());
     BrokersConfigs brokersConfigs = captor.getValue();
     ConfigMap brokerConfigMap = brokersConfigs.configMaps.values().iterator().next();
     String config = brokerConfigMap.getData().get(BrokerEnvironmentFactory.CONFIG_FILE);
@@ -343,7 +342,7 @@ public class BrokerEnvironmentFactoryTest {
     factory.createForArtifactsBroker(pluginFQNs, runtimeId, false);
 
     // then
-    verify(factory).doCreate(captor.capture(), runtimeId);
+    verify(factory).doCreate(captor.capture());
     BrokersConfigs brokersConfigs = captor.getValue();
     InternalMachineConfig machine = brokersConfigs.machines.values().iterator().next();
     assertTrue(machine.getVolumes().containsKey(PLUGINS_VOLUME_NAME));
@@ -360,7 +359,7 @@ public class BrokerEnvironmentFactoryTest {
     factory.createForMetadataBroker(pluginFQNs, runtimeId, false);
 
     // then
-    verify(factory).doCreate(captor.capture(), runtimeId);
+    verify(factory).doCreate(captor.capture());
     BrokersConfigs brokersConfigs = captor.getValue();
     InternalMachineConfig machine = brokersConfigs.machines.values().iterator().next();
     assertFalse(machine.getVolumes().containsKey(PLUGINS_VOLUME_NAME));

@@ -11,18 +11,19 @@
  */
 package org.eclipse.che.workspace.infrastructure.openshift.wsplugins.brokerphases;
 
+import java.util.Collection;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.eclipse.che.api.core.model.workspace.runtime.RuntimeIdentity;
 import org.eclipse.che.api.workspace.server.spi.InfrastructureException;
 import org.eclipse.che.api.workspace.server.spi.provision.env.AgentAuthEnableEnvVarProvider;
 import org.eclipse.che.api.workspace.server.spi.provision.env.MachineTokenEnvVarProvider;
+import org.eclipse.che.api.workspace.server.wsplugins.model.PluginFQN;
 import org.eclipse.che.commons.annotation.Nullable;
 import org.eclipse.che.workspace.infrastructure.kubernetes.provision.CertificateProvisioner;
 import org.eclipse.che.workspace.infrastructure.kubernetes.wsplugins.brokerphases.BrokerEnvironmentFactory;
 import org.eclipse.che.workspace.infrastructure.kubernetes.wsplugins.brokerphases.KubernetesBrokerEnvironmentFactory;
 import org.eclipse.che.workspace.infrastructure.openshift.environment.OpenShiftEnvironment;
-import org.eclipse.che.workspace.infrastructure.openshift.project.OpenShiftProjectFactory;
 import org.eclipse.che.workspace.infrastructure.openshift.provision.OpenshiftTrustedCAProvisioner;
 
 /**
@@ -34,7 +35,6 @@ public class OpenshiftBrokerEnvironmentFactory
     extends BrokerEnvironmentFactory<OpenShiftEnvironment> {
 
   private final OpenshiftTrustedCAProvisioner trustedCAProvisioner;
-  private final OpenShiftProjectFactory factory;
 
   @Inject
   public OpenshiftBrokerEnvironmentFactory(
@@ -47,7 +47,6 @@ public class OpenshiftBrokerEnvironmentFactory
       @Nullable @Named("che.workspace.plugin_registry_url") String pluginRegistryUrl,
       @Named("che.infra.openshift.trusted_ca_bundles_mount_path") String caCertificatesMountPath,
       CertificateProvisioner certProvisioner,
-      OpenShiftProjectFactory factory,
       OpenshiftTrustedCAProvisioner trustedCAProvisioner) {
     super(
         cheWebsocketEndpoint,
@@ -60,20 +59,24 @@ public class OpenshiftBrokerEnvironmentFactory
         trustedCAProvisioner,
         caCertificatesMountPath,
         certProvisioner);
-    this.factory = factory;
     this.trustedCAProvisioner = trustedCAProvisioner;
   }
 
   @Override
-  protected OpenShiftEnvironment doCreate(BrokersConfigs brokersConfigs, RuntimeIdentity runtimeID)
+  protected OpenShiftEnvironment doCreate(BrokersConfigs brokersConfigs) {
+    return OpenShiftEnvironment.builder()
+        .setConfigMaps(brokersConfigs.configMaps)
+        .setMachines(brokersConfigs.machines)
+        .setPods(brokersConfigs.pods)
+        .build();
+  }
+
+  @Override
+  public OpenShiftEnvironment createForMetadataBroker(
+      Collection<PluginFQN> pluginFQNs, RuntimeIdentity runtimeID, boolean mergePlugins)
       throws InfrastructureException {
     OpenShiftEnvironment openShiftEnvironment =
-        OpenShiftEnvironment.builder()
-            .setConfigMaps(brokersConfigs.configMaps)
-            .setMachines(brokersConfigs.machines)
-            .setPods(brokersConfigs.pods)
-            .build();
-    //    OpenShiftProject openshiftProject = factory.getOrCreate(runtimeID);
+        super.createForMetadataBroker(pluginFQNs, runtimeID, mergePlugins);
     trustedCAProvisioner.provision(openShiftEnvironment, runtimeID);
     return openShiftEnvironment;
   }

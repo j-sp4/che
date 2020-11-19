@@ -12,15 +12,16 @@
 package org.eclipse.che.workspace.infrastructure.kubernetes.wsplugins.brokerphases;
 
 import com.google.common.annotations.Beta;
+import java.util.Collection;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.eclipse.che.api.core.model.workspace.runtime.RuntimeIdentity;
 import org.eclipse.che.api.workspace.server.spi.InfrastructureException;
 import org.eclipse.che.api.workspace.server.spi.provision.env.AgentAuthEnableEnvVarProvider;
 import org.eclipse.che.api.workspace.server.spi.provision.env.MachineTokenEnvVarProvider;
+import org.eclipse.che.api.workspace.server.wsplugins.model.PluginFQN;
 import org.eclipse.che.commons.annotation.Nullable;
 import org.eclipse.che.workspace.infrastructure.kubernetes.environment.KubernetesEnvironment;
-import org.eclipse.che.workspace.infrastructure.kubernetes.namespace.KubernetesNamespaceFactory;
 import org.eclipse.che.workspace.infrastructure.kubernetes.provision.CertificateProvisioner;
 import org.eclipse.che.workspace.infrastructure.kubernetes.provision.KubernetesTrustedCAProvisioner;
 import org.eclipse.che.workspace.infrastructure.kubernetes.provision.TrustedCAProvisioner;
@@ -37,7 +38,6 @@ public class KubernetesBrokerEnvironmentFactory
     extends BrokerEnvironmentFactory<KubernetesEnvironment> {
 
   private final TrustedCAProvisioner trustedCAProvisioner;
-  private final KubernetesNamespaceFactory namespaceFactory;
 
   @Inject
   public KubernetesBrokerEnvironmentFactory(
@@ -49,7 +49,6 @@ public class KubernetesBrokerEnvironmentFactory
       @Named("che.workspace.plugin_broker.artifacts.image") String artifactsBrokerImage,
       @Named("che.workspace.plugin_broker.metadata.image") String metadataBrokerImage,
       @Nullable @Named("che.workspace.plugin_registry_url") String pluginRegistryUrl,
-      KubernetesNamespaceFactory namespaceFactory,
       KubernetesTrustedCAProvisioner trustedCAProvisioner,
       CertificateProvisioner certProvisioner) {
     super(
@@ -64,19 +63,23 @@ public class KubernetesBrokerEnvironmentFactory
         certificateMountPath,
         certProvisioner);
     this.trustedCAProvisioner = trustedCAProvisioner;
-    this.namespaceFactory = namespaceFactory;
   }
 
   @Override
-  protected KubernetesEnvironment doCreate(BrokersConfigs brokersConfigs, RuntimeIdentity runtimeID)
+  protected KubernetesEnvironment doCreate(BrokersConfigs brokersConfigs) {
+    return KubernetesEnvironment.builder()
+        .setConfigMaps(brokersConfigs.configMaps)
+        .setMachines(brokersConfigs.machines)
+        .setPods(brokersConfigs.pods)
+        .build();
+  }
+
+  @Override
+  public KubernetesEnvironment createForMetadataBroker(
+      Collection<PluginFQN> pluginFQNs, RuntimeIdentity runtimeID, boolean mergePlugins)
       throws InfrastructureException {
     KubernetesEnvironment kubernetesEnvironment =
-        KubernetesEnvironment.builder()
-            .setConfigMaps(brokersConfigs.configMaps)
-            .setMachines(brokersConfigs.machines)
-            .setPods(brokersConfigs.pods)
-            .build();
-    //    KubernetesNamespace kubernetesNamespace = namespaceFactory.getOrCreate(runtimeID);
+        super.createForMetadataBroker(pluginFQNs, runtimeID, mergePlugins);
     trustedCAProvisioner.provision(kubernetesEnvironment, runtimeID);
     return kubernetesEnvironment;
   }

@@ -16,8 +16,7 @@ import org.eclipse.che.api.workspace.server.spi.InfrastructureException;
 import org.eclipse.che.workspace.infrastructure.kubernetes.environment.KubernetesEnvironment;
 
 /** Provisions trusted CA certificate into Che server components and all workspaces pods. */
-//public interface TrustedCAProvisioner extends ConfigurationProvisioner {
-public interface TrustedCAProvisioner {
+public interface TrustedCAProvisioner extends ConfigurationProvisioner {
   /**
    * Checks whether additional CA certificates configured. The check is done once on Che server
    * start.

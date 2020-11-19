@@ -103,6 +103,7 @@ public class OpenshiftTrustedCAProvisionerTest {
   @BeforeMethod
   public void setup() throws Exception {
     lenient().when(clientFactory.create()).thenReturn(k8sClient);
+    lenient().when(openShiftProjectFactory.getOrCreate(runtimeID)).thenReturn(openShiftProject);
     lenient().when(openShiftProject.configMaps()).thenReturn(kubernetesConfigsMaps);
     lenient()
         .when(cheInstallationLocation.getInstallationLocationNamespace())

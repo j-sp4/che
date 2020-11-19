@@ -85,6 +85,7 @@ public class KubernetesTrustedCAProvisioner implements TrustedCAProvisioner {
     if (!trustedStoreInitialized) {
       return;
     }
+
     ConfigMap allCaCertsConfigMap =
         cheServerClientFactory
             .create()
@@ -92,7 +93,6 @@ public class KubernetesTrustedCAProvisioner implements TrustedCAProvisioner {
             .inNamespace(installationLocationNamespace)
             .withName(caBundleConfigMap)
             .get();
-
     if (allCaCertsConfigMap == null) {
       return;
     }

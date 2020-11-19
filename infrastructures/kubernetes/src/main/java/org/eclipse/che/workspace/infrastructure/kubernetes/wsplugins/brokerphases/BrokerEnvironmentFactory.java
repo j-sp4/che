@@ -117,7 +117,7 @@ public abstract class BrokerEnvironmentFactory<E extends KubernetesEnvironment> 
       throws InfrastructureException {
     BrokersConfigs brokersConfigs =
         getBrokersConfigs(pluginFQNs, runtimeID, metadataBrokerImage, mergePlugins);
-    return doCreate(brokersConfigs, runtimeID);
+    return doCreate(brokersConfigs);
   }
 
   /**
@@ -138,7 +138,7 @@ public abstract class BrokerEnvironmentFactory<E extends KubernetesEnvironment> 
         .values()
         .forEach(
             m -> m.getVolumes().put(PLUGINS_VOLUME_NAME, new VolumeImpl().withPath("/plugins")));
-    return doCreate(brokersConfigs, runtimeID);
+    return doCreate(brokersConfigs);
   }
 
   protected BrokersConfigs getBrokersConfigs(
@@ -175,8 +175,7 @@ public abstract class BrokerEnvironmentFactory<E extends KubernetesEnvironment> 
   }
 
   /** Needed to implement this component in both - Kubernetes and Openshift infrastructures. */
-  protected abstract E doCreate(BrokersConfigs brokerConfigs, RuntimeIdentity runtimeID)
-      throws InfrastructureException;
+  protected abstract E doCreate(BrokersConfigs brokerConfigs);
 
   private Container newContainer(
       RuntimeIdentity runtimeId,
