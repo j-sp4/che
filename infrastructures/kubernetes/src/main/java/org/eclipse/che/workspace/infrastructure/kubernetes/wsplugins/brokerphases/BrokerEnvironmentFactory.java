@@ -50,6 +50,7 @@ import org.eclipse.che.commons.lang.Pair;
 import org.eclipse.che.workspace.infrastructure.kubernetes.Names;
 import org.eclipse.che.workspace.infrastructure.kubernetes.environment.KubernetesEnvironment;
 import org.eclipse.che.workspace.infrastructure.kubernetes.provision.CertificateProvisioner;
+import org.eclipse.che.workspace.infrastructure.kubernetes.provision.TrustedCAProvisioner;
 import org.eclipse.che.workspace.infrastructure.kubernetes.util.Containers;
 
 /**
@@ -77,6 +78,8 @@ public abstract class BrokerEnvironmentFactory<E extends KubernetesEnvironment> 
   private final String artifactsBrokerImage;
   private final String metadataBrokerImage;
   private final String pluginRegistryUrl;
+  private final TrustedCAProvisioner trustedCAProvisioner;
+  private final String certificateMountPath;
   private final CertificateProvisioner certProvisioner;
 
   public BrokerEnvironmentFactory(
@@ -87,6 +90,8 @@ public abstract class BrokerEnvironmentFactory<E extends KubernetesEnvironment> 
       String artifactsBrokerImage,
       String metadataBrokerImage,
       String pluginRegistryUrl,
+      TrustedCAProvisioner trustedCAProvisioner,
+      String certificateMountPath,
       CertificateProvisioner certProvisioner) {
     this.cheWebsocketEndpoint = cheWebsocketEndpoint;
     this.brokerPullPolicy = brokerPullPolicy;
@@ -95,6 +100,8 @@ public abstract class BrokerEnvironmentFactory<E extends KubernetesEnvironment> 
     this.artifactsBrokerImage = artifactsBrokerImage;
     this.metadataBrokerImage = metadataBrokerImage;
     this.pluginRegistryUrl = pluginRegistryUrl;
+    this.trustedCAProvisioner = trustedCAProvisioner;
+    this.certificateMountPath = certificateMountPath;
     this.certProvisioner = certProvisioner;
   }
 
@@ -110,7 +117,7 @@ public abstract class BrokerEnvironmentFactory<E extends KubernetesEnvironment> 
       throws InfrastructureException {
     BrokersConfigs brokersConfigs =
         getBrokersConfigs(pluginFQNs, runtimeID, metadataBrokerImage, mergePlugins);
-    return doCreate(brokersConfigs);
+    return doCreate(brokersConfigs, runtimeID);
   }
 
   /**
@@ -131,7 +138,7 @@ public abstract class BrokerEnvironmentFactory<E extends KubernetesEnvironment> 
         .values()
         .forEach(
             m -> m.getVolumes().put(PLUGINS_VOLUME_NAME, new VolumeImpl().withPath("/plugins")));
-    return doCreate(brokersConfigs);
+    return doCreate(brokersConfigs, runtimeID);
   }
 
   protected BrokersConfigs getBrokersConfigs(
@@ -168,7 +175,8 @@ public abstract class BrokerEnvironmentFactory<E extends KubernetesEnvironment> 
   }
 
   /** Needed to implement this component in both - Kubernetes and Openshift infrastructures. */
-  protected abstract E doCreate(BrokersConfigs brokerConfigs);
+  protected abstract E doCreate(BrokersConfigs brokerConfigs, RuntimeIdentity runtimeID)
+      throws InfrastructureException;
 
   private Container newContainer(
       RuntimeIdentity runtimeId,
@@ -212,6 +220,10 @@ public abstract class BrokerEnvironmentFactory<E extends KubernetesEnvironment> 
                 certProvisioner.isConfigured() ? certProvisioner.getCertPath() : "",
                 "--registry-address",
                 Strings.nullToEmpty(pluginRegistryUrl)));
+    if (trustedCAProvisioner.isTrustedStoreInitialized()) {
+      args.add("--cadir");
+      args.add(certificateMountPath);
+    }
     if (mergePlugins) {
       args.add("--merge-plugins");
     }

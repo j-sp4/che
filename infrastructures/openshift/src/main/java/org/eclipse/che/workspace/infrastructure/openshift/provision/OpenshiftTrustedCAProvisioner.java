@@ -20,6 +20,7 @@ import org.eclipse.che.commons.annotation.Nullable;
 import org.eclipse.che.workspace.infrastructure.kubernetes.CheServerKubernetesClientFactory;
 import org.eclipse.che.workspace.infrastructure.kubernetes.environment.CheInstallationLocation;
 import org.eclipse.che.workspace.infrastructure.kubernetes.provision.KubernetesTrustedCAProvisioner;
+import org.eclipse.che.workspace.infrastructure.openshift.project.OpenShiftProjectFactory;
 
 /**
  * Checks if config maps with CA bundles is configured by specific property. If they are, then
@@ -38,6 +39,7 @@ public class OpenshiftTrustedCAProvisioner extends KubernetesTrustedCAProvisione
       @Named("che.infra.openshift.trusted_ca_bundles_config_map_labels") String configMapLabel,
       @Named("che.infra.openshift.trusted_ca_bundles_mount_path") String certificateMountPath,
       CheInstallationLocation cheInstallationLocation,
+      OpenShiftProjectFactory projectFactory,
       CheServerKubernetesClientFactory cheServerClientFactory)
       throws InfrastructureException {
     super(
@@ -45,6 +47,7 @@ public class OpenshiftTrustedCAProvisioner extends KubernetesTrustedCAProvisione
         configMapName,
         certificateMountPath,
         cheInstallationLocation,
+        projectFactory,
         cheServerClientFactory);
     this.configMapLabelKeyValue = Splitter.on(",").withKeyValueSeparator("=").split(configMapLabel);
   }

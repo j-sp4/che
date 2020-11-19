@@ -312,7 +312,7 @@ public class KubernetesInternalRuntime<E extends KubernetesEnvironment>
         context.getEnvironment(), context.getIdentity(), namespace);
     LOG.debug("Provisioning of workspace '{}' completed.", workspaceId);
 
-    trustedCAProvisioner.provision(context.getEnvironment(), context.getRuntime().namespace);
+    trustedCAProvisioner.provision(context.getEnvironment(), context.getIdentity());
   }
 
   /**

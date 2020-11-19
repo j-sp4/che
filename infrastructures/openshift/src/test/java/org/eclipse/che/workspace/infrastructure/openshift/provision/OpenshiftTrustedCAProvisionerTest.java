@@ -35,12 +35,14 @@ import io.fabric8.kubernetes.client.dsl.Resource;
 import io.fabric8.openshift.client.OpenShiftClient;
 import java.util.HashMap;
 import java.util.Map;
+import org.eclipse.che.api.core.model.workspace.runtime.RuntimeIdentity;
 import org.eclipse.che.workspace.infrastructure.kubernetes.CheServerKubernetesClientFactory;
 import org.eclipse.che.workspace.infrastructure.kubernetes.environment.CheInstallationLocation;
 import org.eclipse.che.workspace.infrastructure.kubernetes.environment.KubernetesEnvironment;
 import org.eclipse.che.workspace.infrastructure.kubernetes.environment.KubernetesEnvironment.PodData;
 import org.eclipse.che.workspace.infrastructure.kubernetes.namespace.KubernetesConfigsMaps;
 import org.eclipse.che.workspace.infrastructure.openshift.project.OpenShiftProject;
+import org.eclipse.che.workspace.infrastructure.openshift.project.OpenShiftProjectFactory;
 import org.mockito.Mock;
 import org.mockito.testng.MockitoTestNGListener;
 import org.testng.annotations.BeforeMethod;
@@ -62,8 +64,10 @@ public class OpenshiftTrustedCAProvisionerTest {
 
   @Mock CheServerKubernetesClientFactory clientFactory;
 
+  @Mock private RuntimeIdentity runtimeID;
   @Mock private KubernetesEnvironment k8sEnv;
   @Mock private OpenShiftProject openShiftProject;
+  @Mock private OpenShiftProjectFactory openShiftProjectFactory;
   @Mock private KubernetesConfigsMaps kubernetesConfigsMaps;
   @Mock private CheInstallationLocation cheInstallationLocation;
 
@@ -124,6 +128,7 @@ public class OpenshiftTrustedCAProvisionerTest {
             CONFIGMAP_LABELS,
             CERTIFICATE_MOUNT_PATH,
             cheInstallationLocation,
+            openShiftProjectFactory,
             clientFactory);
   }
 
@@ -136,11 +141,11 @@ public class OpenshiftTrustedCAProvisionerTest {
             CONFIGMAP_LABELS,
             CERTIFICATE_MOUNT_PATH,
             cheInstallationLocation,
+            openShiftProjectFactory,
             clientFactory);
 
-    localProvisioner.provision(k8sEnv, openShiftProject);
-    verifyZeroInteractions(
-        k8sEnv, openShiftProject, clientFactory, openShiftProject, clientFactory);
+    localProvisioner.provision(k8sEnv, runtimeID);
+    verifyZeroInteractions(k8sEnv, openShiftProject, clientFactory, runtimeID, clientFactory);
   }
 
   @Test
@@ -150,7 +155,7 @@ public class OpenshiftTrustedCAProvisionerTest {
     doReturn(of(POD_NAME, podData)).when(k8sEnv).getPodsData();
     lenient().when(cheServerConfigMapResource.get()).thenReturn(cheServerConfigMap);
 
-    trustedCAProvisioner.provision(k8sEnv, openShiftProject);
+    trustedCAProvisioner.provision(k8sEnv, runtimeID);
 
     assertEquals(envConfigMaps.size(), 1);
     assertTrue(envConfigMaps.get(CONFIGMAP_NAME).getMetadata().getLabels().containsKey("foo"));

@@ -26,6 +26,7 @@ import java.util.Optional;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
+import org.eclipse.che.api.core.model.workspace.runtime.RuntimeIdentity;
 import org.eclipse.che.api.workspace.server.spi.InfrastructureException;
 import org.eclipse.che.commons.annotation.Nullable;
 import org.eclipse.che.workspace.infrastructure.kubernetes.CheServerKubernetesClientFactory;
@@ -34,6 +35,7 @@ import org.eclipse.che.workspace.infrastructure.kubernetes.environment.Kubernete
 import org.eclipse.che.workspace.infrastructure.kubernetes.environment.KubernetesEnvironment.PodData;
 import org.eclipse.che.workspace.infrastructure.kubernetes.environment.KubernetesEnvironment.PodRole;
 import org.eclipse.che.workspace.infrastructure.kubernetes.namespace.KubernetesNamespace;
+import org.eclipse.che.workspace.infrastructure.kubernetes.namespace.KubernetesNamespaceFactory;
 
 /**
  * Checks if config maps with CA bundles is configured by specific property. If they are, then
@@ -50,6 +52,7 @@ public class KubernetesTrustedCAProvisioner implements TrustedCAProvisioner {
   private final String configMapName;
   private final CheServerKubernetesClientFactory cheServerClientFactory;
   private final String installationLocationNamespace;
+  private final KubernetesNamespaceFactory namespaceFactory;
 
   protected Map<String, String> configMapLabelKeyValue;
 
@@ -59,6 +62,7 @@ public class KubernetesTrustedCAProvisioner implements TrustedCAProvisioner {
       @Named("che.infra.kubernetes.trusted_ca_bundles_config_map") String configMapName,
       @Named("che.infra.kubernetes.trusted_ca_bundles_mount_path") String certificateMountPath,
       CheInstallationLocation cheInstallationLocation,
+      KubernetesNamespaceFactory namespaceFactory,
       CheServerKubernetesClientFactory cheServerClientFactory)
       throws InfrastructureException {
     this.cheServerClientFactory = cheServerClientFactory;
@@ -67,6 +71,7 @@ public class KubernetesTrustedCAProvisioner implements TrustedCAProvisioner {
     this.caBundleConfigMap = caBundleConfigMap;
     this.certificateMountPath = certificateMountPath;
     this.installationLocationNamespace = cheInstallationLocation.getInstallationLocationNamespace();
+    this.namespaceFactory = namespaceFactory;
 
     this.configMapLabelKeyValue = new HashMap<>();
   }
@@ -75,7 +80,7 @@ public class KubernetesTrustedCAProvisioner implements TrustedCAProvisioner {
     return trustedStoreInitialized;
   }
 
-  public void provision(KubernetesEnvironment k8sEnv, KubernetesNamespace namespace)
+  public void provision(KubernetesEnvironment k8sEnv, RuntimeIdentity runtimeID)
       throws InfrastructureException {
     if (!trustedStoreInitialized) {
       return;
@@ -92,6 +97,7 @@ public class KubernetesTrustedCAProvisioner implements TrustedCAProvisioner {
       return;
     }
 
+    KubernetesNamespace namespace = namespaceFactory.getOrCreate(runtimeID);
     Optional<ConfigMap> existing = namespace.configMaps().get(configMapName);
     if (existing.isEmpty() || !existing.get().getData().equals(allCaCertsConfigMap.getData())) {
       // create or renew map

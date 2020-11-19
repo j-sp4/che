@@ -11,11 +11,12 @@
  */
 package org.eclipse.che.workspace.infrastructure.kubernetes.provision;
 
+import org.eclipse.che.api.core.model.workspace.runtime.RuntimeIdentity;
 import org.eclipse.che.api.workspace.server.spi.InfrastructureException;
 import org.eclipse.che.workspace.infrastructure.kubernetes.environment.KubernetesEnvironment;
-import org.eclipse.che.workspace.infrastructure.kubernetes.namespace.KubernetesNamespace;
 
 /** Provisions trusted CA certificate into Che server components and all workspaces pods. */
+//public interface TrustedCAProvisioner extends ConfigurationProvisioner {
 public interface TrustedCAProvisioner {
   /**
    * Checks whether additional CA certificates configured. The check is done once on Che server
@@ -30,9 +31,9 @@ public interface TrustedCAProvisioner {
    * namespace
    *
    * @param k8sEnv available objects in the scope
-   * @param namespace namespace into which config map should be provisioned
+   * @param runtimeID defines namespace into which config map should be provisioned
    * @throws InfrastructureException if failed to CRUD a resource
    */
-  void provision(KubernetesEnvironment k8sEnv, KubernetesNamespace namespace)
+  void provision(KubernetesEnvironment k8sEnv, RuntimeIdentity runtimeID)
       throws InfrastructureException;
 }
