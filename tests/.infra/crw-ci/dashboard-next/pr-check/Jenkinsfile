@@ -202,10 +202,6 @@ pipeline {
                     }
 
                     steps {
-
-                    }
-
-                    steps {
                         echo "Build branch master of upstream projects"
                         sh "sudo yum install -y glibc.i686 libfontconfig.so.1 libstdc++-devel.i686"
 
