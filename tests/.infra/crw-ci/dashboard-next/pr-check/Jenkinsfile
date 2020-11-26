@@ -187,6 +187,8 @@ pipeline {
                             echo "Build the 'che-dashboard-next' image"
 
                             docker build . -f apache.Dockerfile -t quay.io/che-incubator/che-dashboard-next:iokhrime
+
+                            cd ..
                         """
                     }
                 }
