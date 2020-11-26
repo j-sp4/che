@@ -309,8 +309,10 @@ EOL"""
 
                     echo "Install Che"
                     sh """
-                        ${pathToChectl} server:start \\
-                        --k8spodreadytimeout=180000 \\
+                        ${pathToChectl} server:deploy \\
+                        --k8spodreadytimeout=600000 \\
+                        --k8spodwaittimeout=600000 \\
+                        --k8spoddownloadimagetimeout=600000 \\
                         --listr-renderer=verbose \\
                         --platform=minikube \\
                         --che-operator-cr-patch-yaml=$CUSTOM_RESOURCE_PATCH_FILE \\
