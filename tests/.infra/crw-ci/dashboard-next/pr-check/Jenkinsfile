@@ -170,32 +170,6 @@ pipeline {
                     }
                 }
 
-
-
-
-
-                stage("Build the 'che-dashboard-next' image"){
-                    steps {
-                        sh """
-                            echo "Donwload the 'che-dashboard-next' project and checkout to branch"
-
-                            git clone $DASHBOARD_NEXT_REPO_URL
-                            cd che-dashboard-next
-                            git checkout $ghprbSourceBranch
-
-
-                            echo "Build the 'che-dashboard-next' image"
-
-                            docker build . -f apache.Dockerfile -t quay.io/che-incubator/che-dashboard-next:iokhrime
-
-                            cd ..
-                        """
-                    }
-                }
-
-
-
-
                 stage("Build Che including upstream projects") {
                     when {
                         expression { 
@@ -230,19 +204,38 @@ pipeline {
                     }
                 }
 
-                stage("Pull test images") {
-                    steps {
-                        script {
-                            retry(2) {
-                                echo "Pull test images"
-                                sh """
-                                    docker pull quay.io/eclipse/che-e2e:$cheE2eImageTag
-                                    docker pull quay.io/eclipse/happy-path:nightly
-                                """
-                            }
-                        }
-                    }
-                }
+                // stage("Pull test images") {
+                //     steps {
+                //         script {
+                //             retry(2) {
+                //                 echo "Pull test images"
+                //                 sh """
+                //                     docker pull quay.io/eclipse/che-e2e:$cheE2eImageTag
+                //                     docker pull quay.io/eclipse/happy-path:nightly
+                //                 """
+                //             }
+                //         }
+                //     }
+                // }
+            }
+        }
+
+        stage("Build the 'che-dashboard-next' image"){
+            steps {
+                sh """
+                    echo "Donwload the 'che-dashboard-next' project and checkout to branch"
+
+                    git clone $DASHBOARD_NEXT_REPO_URL
+                    cd che-dashboard-next
+                    git checkout $ghprbSourceBranch
+
+
+                    echo "Build the 'che-dashboard-next' image"
+
+                    docker build . -f apache.Dockerfile -t quay.io/che-incubator/che-dashboard-next:iokhrime
+
+                    cd ..
+                """
             }
         }
 
