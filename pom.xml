@@ -96,7 +96,7 @@
         <org.antlr.st4.version>4.0.7</org.antlr.st4.version>
         <org.apache.commons.lang3.version>3.8.1</org.apache.commons.lang3.version>
         <org.apache.maven.plugin-testing.maven-plugin-testing-harness.version>3.3.0</org.apache.maven.plugin-testing.maven-plugin-testing-harness.version>
-        <org.apache.maven.plugin-tools.plugin-annotations.version>3.2</org.apache.maven.plugin-tools.plugin-annotations.version>
+        <org.apache.maven.plugin-tools.plugin-annotations.version>3.6.2</org.apache.maven.plugin-tools.plugin-annotations.version>
         <org.apache.maven.verson>3.3.3</org.apache.maven.verson>
         <org.apache.tomcat.version>8.5.60</org.apache.tomcat.version>
         <org.codehaus.plexus.utils.version>3.0.20</org.codehaus.plexus.utils.version>
