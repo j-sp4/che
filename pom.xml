@@ -47,7 +47,7 @@
         <specification.version>1.0-beta2</specification.version>
         <?SORTPOM RESUME?>
         <aopalliance.version>1.0</aopalliance.version>
-        <ch.qos.logback.version>1.2.1</ch.qos.logback.version>
+        <ch.qos.logback.version>1.2.7</ch.qos.logback.version>
         <com.auth0.jwks-rsa.version>0.3.0</com.auth0.jwks-rsa.version>
         <com.fasterxml.jackson.core.version>2.10.3</com.fasterxml.jackson.core.version>
         <com.github.kirviq.dumbster.version>1.7.1</com.github.kirviq.dumbster.version>
@@ -90,7 +90,7 @@
         <javax.websocket.api.version>1.1</javax.websocket.api.version>
         <javax.ws.rs.version>2.0</javax.ws.rs.version>
         <junit.version>4.13.1</junit.version>
-        <logstash.logback.encoder.version>4.11</logstash.logback.encoder.version>
+        <logstash.logback.encoder.version>7.1</logstash.logback.encoder.version>
         <mysql.connector.version>8.0.16</mysql.connector.version>
         <net.java.dev.jna.version>4.1.0</net.java.dev.jna.version>
         <org.antlr.st4.version>4.0.7</org.antlr.st4.version>
