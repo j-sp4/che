@@ -49,7 +49,7 @@
         <aopalliance.version>1.0</aopalliance.version>
         <ch.qos.logback.version>1.2.1</ch.qos.logback.version>
         <com.auth0.jwks-rsa.version>0.3.0</com.auth0.jwks-rsa.version>
-        <com.fasterxml.jackson.core.version>2.10.3</com.fasterxml.jackson.core.version>
+        <com.fasterxml.jackson.core.version>2.12.7.1</com.fasterxml.jackson.core.version>
         <com.github.kirviq.dumbster.version>1.7.1</com.github.kirviq.dumbster.version>
         <com.google.code.guice.version>4.2.2</com.google.code.guice.version>
         <com.google.guava.version>27.0.1-jre</com.google.guava.version>
@@ -80,7 +80,7 @@
         <io.opentracing.version>0.33.0</io.opentracing.version>
         <io.opentracing.web-servlet-filter.version>0.4.0</io.opentracing.web-servlet-filter.version>
         <io.prometheus.simpleclient.version>0.7.0</io.prometheus.simpleclient.version>
-        <io.swagger.version>1.5.9</io.swagger.version>
+        <io.swagger.version>1.6.8</io.swagger.version>
         <javax.annotation.version>1.2</javax.annotation.version>
         <javax.inject.version>1</javax.inject.version>
         <javax.json.version>1.1.4</javax.json.version>
