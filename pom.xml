@@ -111,7 +111,7 @@
         <org.kohsuke.github-api.version>1.90</org.kohsuke.github-api.version>
         <org.leadpony.justify.version>0.14.0</org.leadpony.justify.version>
         <org.mockito.mockito-testng.version>0.1.1</org.mockito.mockito-testng.version>
-        <org.mockito.version>2.21.0</org.mockito.version>
+        <org.mockito.version>2.28.2</org.mockito.version>
         <org.postgresql.version>42.2.2</org.postgresql.version>
         <org.reflections.version>0.9.9</org.reflections.version>
         <org.seleniumhq.selenium.version>3.0.1</org.seleniumhq.selenium.version>
