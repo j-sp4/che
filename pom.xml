@@ -93,7 +93,7 @@
         <logstash.logback.encoder.version>4.11</logstash.logback.encoder.version>
         <mysql.connector.version>8.0.16</mysql.connector.version>
         <net.java.dev.jna.version>4.1.0</net.java.dev.jna.version>
-        <org.antlr.st4.version>4.0.7</org.antlr.st4.version>
+        <org.antlr.st4.version>4.3.4</org.antlr.st4.version>
         <org.apache.commons.lang3.version>3.8.1</org.apache.commons.lang3.version>
         <org.apache.maven.plugin-testing.maven-plugin-testing-harness.version>3.3.0</org.apache.maven.plugin-testing.maven-plugin-testing-harness.version>
         <org.apache.maven.plugin-tools.plugin-annotations.version>3.2</org.apache.maven.plugin-tools.plugin-annotations.version>
